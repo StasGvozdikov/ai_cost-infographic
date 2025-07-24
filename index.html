@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Інфографіка: Економіка Штучного Інтелекту з прогнозом Gemini</title>
+    <title>Інфографіка: Економіка Штучного Інтелекту</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FFFFFF; /* Змінено фон на білий */
+            background-color: #FFFFFF;
         }
         .chart-container {
             position: relative;
@@ -71,19 +71,6 @@
             background-color: #94a3b8;
             cursor: not-allowed;
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #00B9AE;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="text-[#00407A]">
@@ -125,9 +112,9 @@
                 </div>
             </section>
             
-            <section id="gemini-section" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+            <section id="static-forecast-section" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
                 <div class="text-center mb-6">
-                    <h2 class="text-3xl font-bold text-[#00407A]">✨ Персональний прогноз від Gemini</h2>
+                    <h2 class="text-3xl font-bold text-[#00407A]">✨ Персональний прогноз</h2>
                     <p class="mt-2 text-lg max-w-3xl mx-auto">Як прийдешні зміни на ринку ШІ вплинуть на вас? Оберіть свою роль, щоб отримати аналіз та рекомендації.</p>
                 </div>
                 <div class="max-w-xl mx-auto text-center">
@@ -144,7 +131,6 @@
                         <button id="getAnalysisBtn" class="gemini-button w-full sm:w-auto">Отримати прогноз</button>
                     </div>
                     <div id="analysisResult" class="mt-6 text-left bg-blue-50 p-4 rounded-lg border border-[#00B9AE]" style="display: none;">
-                        <div id="loader" class="loader" style="display: none;"></div>
                         <div id="resultText"></div>
                     </div>
                 </div>
@@ -269,59 +255,66 @@
         const getAnalysisBtn = document.getElementById('getAnalysisBtn');
         const roleSelector = document.getElementById('roleSelector');
         const analysisResultDiv = document.getElementById('analysisResult');
-        const loader = document.getElementById('loader');
         const resultText = document.getElementById('resultText');
 
-        getAnalysisBtn.addEventListener('click', async () => {
-            const role = roleSelector.options[roleSelector.selectedIndex].text;
+        const staticForecasts = {
+            developer: `<h3>Прогноз для Розробника</h3>
+                        <p>Різке здорожчання API змусить шукати більш економні моделі та оптимізувати кожен запит. Це стимулюватиме розвиток менших, спеціалізованих моделей та локальних рішень.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Диверсифікуйте ШІ-інструменти:</strong> Не покладайтеся на одного провайдера.</li>
+                            <li><strong>Оптимізуйте запити:</strong> Мінімізуйте кількість токенів та складність запитів.</li>
+                            <li><strong>Вивчайте Open Source:</strong> Розгляньте можливість розгортання відкритих моделей для менш критичних завдань.</li>
+                        </ul>`,
+            business_owner: `<h3>Прогноз для Власника бізнесу</h3>
+                        <p>Витрати на ШІ-рішення, інтегровані у ваші бізнес-процеси, можуть несподівано зрости. "Безкоштовні" та "безлімітні" плани зникнуть, що потребуватиме перегляду бюджетів.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Проведіть аудит:</strong> Оцініть, наскільки ваш бізнес залежить від ШІ-сервісів.</li>
+                            <li><strong>Плануйте бюджет:</strong> Закладайте потенційне 5-10-кратне зростання витрат на ШІ.</li>
+                            <li><strong>Цінуйте людську експертизу:</strong> Інвестуйте у фахівців, чиї навички не може замінити ШІ.</li>
+                        </ul>`,
+            contractor: `<h3>Прогноз для Підрядника</h3>
+                        <p>Інструменти для автоматичного розрахунку кошторисів, аналізу ринку матеріалів та управління проєктами на базі ШІ стануть значно дорожчими. Це може вплинути на вашу операційну маржу.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Перегляньте вартість послуг:</strong> Враховуйте майбутнє зростання цін на ПЗ у вартості ваших проєктів.</li>
+                            <li><strong>Розвивайте власну експертизу:</strong> Поглиблюйте знання в аналізі ринку та ціноутворенні, щоб менше залежати від автоматизованих систем.</li>
+                            <li><strong>Шукайте комплексні рішення:</strong> Обирайте ПЗ, що пропонує прозорі та прогнозовані тарифи.</li>
+                        </ul>`,
+            client: `<h3>Прогноз для Замовника</h3>
+                        <p>Вартість послуг підрядників та проєктних організацій, які активно використовують ШІ, може зрости. Водночас підвищиться цінність експертів, здатних давати точні прогнози без повної залежності від ШІ.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Вимагайте прозорості:</strong> Цікавтеся, як формується кошторис і які інструменти використовуються для аналітики.</li>
+                            <li><strong>Цінуйте незалежну експертизу:</strong> Залучайте консультантів для перевірки та валідації даних, отриманих за допомогою ШІ.</li>
+                            <li><strong>Плануйте довгостроково:</strong> Обирайте партнерів, які мають стійку бізнес-модель і не залежать від "дешевих" технологій.</li>
+                        </ul>`,
+            student: `<h3>Прогноз для Студента</h3>
+                        <p>Ера "безлімітного" доступу до потужних ШІ для навчання та написання робіт закінчується. Доведеться більш економно використовувати ресурси та більше покладатися на власні знання.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Навчайтеся основ:</strong> Фокусуйтеся на фундаментальних знаннях, які ШІ лише доповнює.</li>
+                            <li><strong>Використовуйте з розумом:</strong> Ставтеся до ШІ як до помічника, а не як до виконавця.</li>
+                            <li><strong>Зберігайте важливі дані:</strong> Не розраховуйте, що ваші чати та проєкти в ШІ-сервісах будуть доступні вічно і безкоштовно.</li>
+                        </ul>`,
+            investor: `<h3>Прогноз для Інвестора</h3>
+                        <p>Ринок ШІ чекає "протверезіння". Багато компаній, що спалюють гроші, не виживуть. Перевагу отримають ті, хто має чітку бізнес-модель та реальні доходи.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Аналізуйте юніт-економіку:</strong> Уникайте компаній, які втрачають гроші на кожному клієнті.</li>
+                            <li><strong>Ставте на інфраструктуру:</strong> Виробники "заліза" (як NVIDIA) та ключові моделі залишаться у виграші.</li>
+                            <li><strong>Диверсифікуйте:</strong> Не вкладайте все в один "хайповий" стартап.</li>
+                        </ul>`,
+            marketer: `<h3>Прогноз для Маркетолога</h3>
+                        <p>Генерація контенту, аналіз аудиторії та створення креативів за допомогою ШІ подорожчають. Доведеться більш виважено підходити до використання цих інструментів.</p>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Цінуйте якість, а не кількість:</strong> Фокусуйтеся на створенні унікального контенту, а не на масовій генерації.</li>
+                            <li><strong>Розвивайте стратегічні навички:</strong> Ваша здатність розробити стратегію буде ціннішою за вміння написати промпт.</li>
+                            <li><strong>Тестуйте різні інструменти:</strong> Шукайте нішеві та більш доступні ШІ-рішення для ваших завдань.</li>
+                        </ul>`
+        };
+
+        getAnalysisBtn.addEventListener('click', () => {
+            const selectedRole = roleSelector.value;
+            const forecastHTML = staticForecasts[selectedRole];
             
+            resultText.innerHTML = forecastHTML;
             analysisResultDiv.style.display = 'block';
-            resultText.innerHTML = '';
-            loader.style.display = 'block';
-            getAnalysisBtn.disabled = true;
-
-            const context = `
-                You are an expert business and technology analyst. Based on the following data points from an analysis of the AI market economics:
-                - Current AI services are subsidized by venture capital, with users paying only about 10% of the real cost.
-                - Major AI companies like OpenAI, Anthropic, and xAI are losing billions of dollars. For example, Anthropic loses $6.10 for every $1 earned.
-                - The infrastructure is incredibly expensive (e.g., a single NVIDIA H100 GPU costs ~$30,000, and ChatGPT costs $700,000/day to run).
-                - A market correction is predicted, leading to: API prices increasing 10x, 'unlimited' plans disappearing, many AI companies going bankrupt, and only 2-3 major players surviving.
-            `;
-            
-            const prompt = `${context} \n\n Task: Generate a concise, actionable analysis in Ukrainian for a **${role}**. The analysis should explain what these market changes mean for them and suggest 2-3 key strategies to prepare. Format the output as clean HTML with a <h3> title for the role and an unordered list (<ul>) for the strategies. Do not include \`\`\`html tags.`;
-
-            try {
-                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    resultText.innerHTML = text;
-                } else {
-                    throw new Error("No content received from API.");
-                }
-
-            } catch (error) {
-                console.error("Error fetching Gemini analysis:", error);
-                resultText.innerHTML = '<p class="text-red-500">Сталася помилка під час отримання прогнозу. Будь ласка, спробуйте ще раз пізніше.</p>';
-            } finally {
-                loader.style.display = 'none';
-                getAnalysisBtn.disabled = false;
-            }
         });
 
     </script>
