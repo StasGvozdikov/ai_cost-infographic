@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F7F7FF;
+            background-color: #FFFFFF; /* Змінено фон на білий */
         }
         .chart-container {
             position: relative;
@@ -88,9 +88,14 @@
 </head>
 <body class="text-[#00407A]">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 md:p-8 relative">
 
-        <header class="text-center my-8 md:my-12">
+        <div class="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-4 z-10">
+            <span class="font-semibold text-2xl text-black text-right">ГО "Розвиток інфраструктури"</span>
+            <img src="https://idev.org.ua/Logo_idev.png" alt="Логотип ГО Розвиток інфраструктури" class="h-14 w-14">
+        </div>
+
+        <header class="text-center my-8 md:my-12 pt-16 md:pt-12">
             <h1 class="text-4xl md:text-6xl font-black text-[#00407A] leading-tight">Дешевше, ніж зараз, ШІ вже <span class="text-[#00B9AE]">НІКОЛИ</span> не буде</h1>
             <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">Ми є свідками найбільшої технологічної субсидії в історії. Поточні ціни на ШІ — це лише вершина айсберга, що фінансується венчурним капіталом.</p>
         </header>
@@ -130,6 +135,8 @@
                         <select id="roleSelector" class="w-full sm:w-auto flex-grow p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00B9AE] focus:border-[#00B9AE]">
                             <option value="developer">Розробник</option>
                             <option value="business_owner">Власник малого бізнесу</option>
+                            <option value="contractor">Підрядник</option>
+                            <option value="client">Замовник</option>
                             <option value="student">Студент</option>
                             <option value="investor">Інвестор</option>
                             <option value="marketer">Маркетолог</option>
@@ -320,4 +327,3 @@
     </script>
 </body>
 </html>
-
