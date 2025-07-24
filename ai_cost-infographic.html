@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інфографіка: Економіка Штучного Інтелекту з прогнозом Gemini</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F7FF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-left: 5px solid #00F5D4;
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            flex-grow: 1;
+            justify-content: center;
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #00739C;
+            margin: 0 1rem;
+        }
+        .gemini-button {
+            background-color: #00B9AE;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .gemini-button:hover {
+            background-color: #00739C;
+        }
+        .gemini-button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #00B9AE;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-[#00407A]">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center my-8 md:my-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#00407A] leading-tight">Дешевше, ніж зараз, ШІ вже <span class="text-[#00B9AE]">НІКОЛИ</span> не буде</h1>
+            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">Ми є свідками найбільшої технологічної субсидії в історії. Поточні ціни на ШІ — це лише вершина айсберга, що фінансується венчурним капіталом.</p>
+        </header>
+
+        <main class="space-y-12 md:space-y-16">
+
+            <section class="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
+                <h2 class="text-2xl font-bold text-[#00739C]">Ілюзія ціни: Ваша знижка 90%</h2>
+                <p class="mt-2 text-base md:text-lg max-w-2xl mx-auto">Золотий стандарт підписки за $20 — це лише 10% від її реальної вартості. На кожного активного користувача вендори LLM витрачають близько $180 на місяць.</p>
+                <div class="mt-6">
+                    <span class="text-7xl md:text-9xl font-extrabold text-[#00F5D4] drop-shadow-lg">90%</span>
+                    <p class="text-xl md:text-2xl font-bold text-[#00739C] mt-2">Щомісячна знижка, яку фінансує венчурний капітал</p>
+                </div>
+            </section>
+
+            <section>
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#00407A]">Велика гонитва за венчурним капіталом</h2>
+                    <p class="mt-2 text-lg max-w-3xl mx-auto">Найбільші ШІ-компанії спалюють мільярди доларів, втрачаючи значно більше, ніж заробляють. Це гонка, яка не може тривати вічно.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
+                    <h3 class="font-bold text-center text-xl mb-4">Втрати на кожен $1 заробітку</h3>
+                    <div class="chart-container">
+                        <canvas id="lossChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm mt-4 text-gray-500">Дані для OpenAI та Anthropic за 2024 рік, прогноз для xAI на 2025 рік.</p>
+                </div>
+            </section>
+            
+            <section id="gemini-section" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold text-[#00407A]">✨ Персональний прогноз від Gemini</h2>
+                    <p class="mt-2 text-lg max-w-3xl mx-auto">Як прийдешні зміни на ринку ШІ вплинуть на вас? Оберіть свою роль, щоб отримати аналіз та рекомендації.</p>
+                </div>
+                <div class="max-w-xl mx-auto text-center">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <select id="roleSelector" class="w-full sm:w-auto flex-grow p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#00B9AE] focus:border-[#00B9AE]">
+                            <option value="developer">Розробник</option>
+                            <option value="business_owner">Власник малого бізнесу</option>
+                            <option value="student">Студент</option>
+                            <option value="investor">Інвестор</option>
+                            <option value="marketer">Маркетолог</option>
+                        </select>
+                        <button id="getAnalysisBtn" class="gemini-button w-full sm:w-auto">Отримати прогноз</button>
+                    </div>
+                    <div id="analysisResult" class="mt-6 text-left bg-blue-50 p-4 rounded-lg border border-[#00B9AE]" style="display: none;">
+                        <div id="loader" class="loader" style="display: none;"></div>
+                        <div id="resultText"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#00407A]">Реальна вартість одного кліку</h2>
+                    <p class="mt-2 text-lg max-w-3xl mx-auto">За кожним запитом до ШІ стоїть колосальна інфраструктура, вартість якої вимірюється мільярдами доларів та величезним споживанням енергії.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="kpi-card">
+                        <div class="text-5xl font-black text-[#00B9AE]">~ $30,000</div>
+                        <div class="mt-2 font-bold text-lg">Вартість одного GPU NVIDIA H100</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="text-5xl font-black text-[#00B9AE]">$700,000</div>
+                        <div class="mt-2 font-bold text-lg">Щоденні витрати на підтримку ChatGPT</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="text-5xl font-black text-[#00B9AE]">> $30 млрд</div>
+                        <div class="mt-2 font-bold text-lg">Інвестиції OpenAI лише в графічні процесори</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="text-5xl font-black text-[#00B9AE]">~ 900,000</div>
+                        <div class="mt-2 font-bold text-lg">Будинків споживають стільки ж енергії, як один дата-центр ШІ</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#00407A]">Майбутня корекція ринку</h2>
+                    <p class="mt-2 text-lg max-w-3xl mx-auto">Вечірка добігає кінця. Експерти прогнозують різкі зміни на ринку, коли економіка ШІ зіткнеться з реальністю.</p>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flow-step"><span>Ціни на API<br>зростуть у 10 разів</span></div>
+                    <div class="flow-arrow hidden md:block">→</div>
+                    <div class="flow-arrow block md:hidden">↓</div>
+                    <div class="flow-step"><span>"Безлімітні" тарифи<br>повністю зникнуть</span></div>
+                    <div class="flow-arrow hidden md:block">→</div>
+                     <div class="flow-arrow block md:hidden">↓</div>
+                    <div class="flow-step"><span>Багато компаній<br>збанкрутують</span></div>
+                     <div class="flow-arrow hidden md:block">→</div>
+                     <div class="flow-arrow block md:hidden">↓</div>
+                    <div class="flow-step"><span>Виживуть лише<br>2-3 гравці</span></div>
+                </div>
+            </section>
+
+            <section>
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-[#00407A]">Що робити нам?</h2>
+                    <p class="mt-2 text-lg max-w-3xl mx-auto">Поки триває бета-тест, варто підготуватися до майбутнього.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="font-bold text-xl text-[#00739C]">👨‍💻 Для розробників та бізнесу</h3>
+                        <p class="mt-2">Починайте закладати в бюджет 10-кратне підвищення цін на API. Шукайте шляхи оптимізації та зменшення залежності від одного провайдера.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="font-bold text-xl text-[#00739C]">👤 Для звичайних користувачів</h3>
+                        <p class="mt-2">Насолоджуйтесь, поки можете! Зробіть скріншот цього моменту, щоб згадувати часи, коли ШІ був майже безкоштовним. Вартість $200/місяць скоро може здатися смішною.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center my-12 md:my-16 border-t-2 border-[#00B9AE] pt-8">
+            <p class="text-xl md:text-2xl font-bold">Вечірка закінчується, а похмілля буде важким.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const lossCtx = document.getElementById('lossChart').getContext('2d');
+        new Chart(lossCtx, {
+            type: 'bar',
+            data: {
+                labels: ['OpenAI', 'Anthropic', 'xAI (прогноз)'],
+                datasets: [{
+                    label: 'Втрати на $1 заробітку',
+                    data: [1.35, 6.10, 26.00],
+                    backgroundColor: ['#00F5D4', '#00B9AE', '#00739C'],
+                    borderColor: ['#00407A'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Сума в доларах ($)', font: { weight: 'bold' } },
+                        ticks: { callback: (value) => '$' + value }
+                    },
+                    y: { ticks: { font: { size: 14, weight: 'bold' } } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (tooltipItems) => {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            },
+                            label: (context) => {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.x !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.x);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const getAnalysisBtn = document.getElementById('getAnalysisBtn');
+        const roleSelector = document.getElementById('roleSelector');
+        const analysisResultDiv = document.getElementById('analysisResult');
+        const loader = document.getElementById('loader');
+        const resultText = document.getElementById('resultText');
+
+        getAnalysisBtn.addEventListener('click', async () => {
+            const role = roleSelector.options[roleSelector.selectedIndex].text;
+            
+            analysisResultDiv.style.display = 'block';
+            resultText.innerHTML = '';
+            loader.style.display = 'block';
+            getAnalysisBtn.disabled = true;
+
+            const context = `
+                You are an expert business and technology analyst. Based on the following data points from an analysis of the AI market economics:
+                - Current AI services are subsidized by venture capital, with users paying only about 10% of the real cost.
+                - Major AI companies like OpenAI, Anthropic, and xAI are losing billions of dollars. For example, Anthropic loses $6.10 for every $1 earned.
+                - The infrastructure is incredibly expensive (e.g., a single NVIDIA H100 GPU costs ~$30,000, and ChatGPT costs $700,000/day to run).
+                - A market correction is predicted, leading to: API prices increasing 10x, 'unlimited' plans disappearing, many AI companies going bankrupt, and only 2-3 major players surviving.
+            `;
+            
+            const prompt = `${context} \n\n Task: Generate a concise, actionable analysis in Ukrainian for a **${role}**. The analysis should explain what these market changes mean for them and suggest 2-3 key strategies to prepare. Format the output as clean HTML with a <h3> title for the role and an unordered list (<ul>) for the strategies. Do not include \`\`\`html tags.`;
+
+            try {
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    resultText.innerHTML = text;
+                } else {
+                    throw new Error("No content received from API.");
+                }
+
+            } catch (error) {
+                console.error("Error fetching Gemini analysis:", error);
+                resultText.innerHTML = '<p class="text-red-500">Сталася помилка під час отримання прогнозу. Будь ласка, спробуйте ще раз пізніше.</p>';
+            } finally {
+                loader.style.display = 'none';
+                getAnalysisBtn.disabled = false;
+            }
+        });
+
+    </script>
+</body>
+</html>
+
